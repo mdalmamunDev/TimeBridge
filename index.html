@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Age Clock</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-900 min-h-screen flex items-center justify-center bg-cover"
+    style="background-image: url('images/bg.jpg');">
+
+    <!-- Overlay -->
+    <div class="absolute inset-0 bg-black opacity-60"></div>
+
+    <div id="app" class="bg-gray-800 shadow-lg rounded-lg p-8 w-11/12 max-w-md text-gray-300 z-10">
+        <div class="text-center">
+            <h1 class="text-3xl font-extrabold mb-6 text-gray-100">Age Clock</h1>
+            <label class="block text-gray-400 font-medium mb-4" for="birthDate">
+                Enter your birth date:
+            </label>
+            <input id="birthDate" type="datetime-local" v-model="birthDate"
+                class="p-3 bg-gray-700 text-gray-300 border border-gray-600 rounded-md mb-6 focus:outline-none focus:ring-4 focus:ring-purple-500 transition duration-200" />
+            <div class="bg-gray-700 text-gray-100 p-4 rounded-md shadow-md">
+                <p class="font-mono text-xl font-semibold">Age:</p>
+                <p class="font-mono text-2xl mt-2">{{ formattedAge }}</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        new Vue({
+            el: "#app",
+            data() {
+                return {
+                    birthDate: "2002-08-10T00:00:00", // Default birth date in ISO format
+                    age: {
+                        years: 0,
+                        months: 0,
+                        days: 0,
+                        hours: 0,
+                        minutes: 0,
+                        seconds: 0,
+                    },
+                    intervalId: null,
+                };
+            },
+            computed: {
+                formattedAge() {
+                    const { years, months, days, hours, minutes, seconds } = this.age;
+                    return `${years.toString().padStart(2, "0")}-${months.toString().padStart(2, "0")}-${days.toString().padStart(2, "0")} ` +
+                        `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+                },
+            },
+            methods: {
+                calculateAge() {
+                    const birthDateTime = new Date(this.birthDate);
+                    const now = new Date();
+
+                    let years = now.getFullYear() - birthDateTime.getFullYear();
+                    let months = now.getMonth() - birthDateTime.getMonth();
+                    let days = now.getDate() - birthDateTime.getDate();
+                    let hours = now.getHours() - birthDateTime.getHours();
+                    let minutes = now.getMinutes() - birthDateTime.getMinutes();
+                    let seconds = now.getSeconds() - birthDateTime.getSeconds();
+
+                    if (seconds < 0) {
+                        seconds += 60;
+                        minutes--;
+                    }
+                    if (minutes < 0) {
+                        minutes += 60;
+                        hours--;
+                    }
+                    if (hours < 0) {
+                        hours += 24;
+                        days--;
+                    }
+                    if (days < 0) {
+                        const prevMonth = new Date(now.getFullYear(), now.getMonth(), 0);
+                        days += prevMonth.getDate();
+                        months--;
+                    }
+                    if (months < 0) {
+                        months += 12;
+                        years--;
+                    }
+
+                    this.age = { years, months, days, hours, minutes, seconds };
+                },
+            },
+            mounted() {
+                this.calculateAge();
+                this.intervalId = setInterval(this.calculateAge, 1000);
+            },
+            beforeDestroy() {
+                clearInterval(this.intervalId);
+            },
+        });
+    </script>
+
+</body>
+
+</html>
