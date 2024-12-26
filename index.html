@@ -6,31 +6,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Age Clock</title>
     <link rel="icon" type="image/x-icon" href="images/icon.png">
-    <!-- <link rel="shortcut icon" href="http://127.0.0.1:8000/vue3_assets/images/logo.png"> -->
     <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-gray-900 min-h-screen flex items-center justify-center bg-cover"
-    style="background-image: url('images/bg.jpg');">
+<body>
+    <div id="app" class="bg-gray-900 min-h-screen flex items-center justify-center bg-cover"
+        style="background-image: url('images/bg.jpg');">
+        
+        <!-- Overlay -->
+        <div class="absolute inset-0 bg-black opacity-60"></div>
 
-    <!-- Overlay -->
-    <div class="absolute inset-0 bg-black opacity-60"></div>
 
-    <div id="app" class="bg-gray-800 shadow-lg rounded-lg p-8 w-11/12 max-w-md text-gray-300 z-10">
-        <div class="text-center">
-            <h1 class="text-3xl font-extrabold mb-6 text-gray-100">Age Clock</h1>
-            <label class="block text-gray-400 font-medium mb-4" for="birthDate">
-                Enter your birth date:
-            </label>
-            <input id="birthDate" type="datetime-local" v-model="birthDate"
-                class="p-3 bg-gray-700 text-gray-300 border border-gray-600 rounded-md mb-6 focus:outline-none focus:ring-4 focus:ring-purple-500 transition duration-200" />
-            <div class="bg-gray-700 text-gray-100 p-4 rounded-md shadow-md">
-                <p class="font-mono text-xl font-semibold">Age:</p>
-                <p class="font-mono text-2xl mt-2">
-                    {{ formattedAge.years }}<span class="text-xs">yr</span>-{{ formattedAge.months }}<span class="text-xs">mn</span>-{{ formattedAge.days }}<span class="text-xs">dy</span> 
-                    {{ formattedAge.hours }}:{{ formattedAge.minutes }}:{{ formattedAge.seconds }}
-                </p>
+        <div class="absolute top-4 right-4 text-gray-100 text-xl font-mono">
+            {{ currentDateTime }}
+        </div>
+
+        <div class="bg-gray-800 shadow-lg rounded-lg p-8 w-11/12 max-w-md text-gray-300 z-10">
+            <div class="text-center">
+                <h1 class="text-3xl font-extrabold mb-6 text-gray-100">Age Clock</h1>
+                <label class="block text-gray-400 font-medium mb-4" for="birthDate">
+                    Enter your birth date:
+                </label>
+                <input id="birthDate" type="datetime-local" v-model="birthDate"
+                    class="p-3 bg-gray-700 text-gray-300 border border-gray-600 rounded-md mb-6 focus:outline-none focus:ring-4 focus:ring-purple-500 transition duration-200" />
+                <div class="bg-gray-700 text-gray-100 p-4 rounded-md shadow-md">
+                    <p class="font-mono text-xl font-semibold">Age:</p>
+                    <p class="font-mono text-2xl mt-2">
+                        {{ formattedAge.years }}<span class="text-xs">yr</span>-{{ formattedAge.months }}<span class="text-xs">mn</span>-{{ formattedAge.days }}<span class="text-xs">dy</span> 
+                        {{ formattedAge.hours }}:{{ formattedAge.minutes }}:{{ formattedAge.seconds }}
+                    </p>
+                </div>
             </div>
         </div>
     </div>
@@ -50,6 +56,7 @@
                         seconds: 0,
                     },
                     intervalId: null,
+                    currentDateTime: "",
                 };
             },
             computed: {
@@ -101,10 +108,15 @@
 
                     this.age = { years, months, days, hours, minutes, seconds };
                 },
+                updateDateTime() {
+                    const now = new Date();
+                    this.currentDateTime = now.toLocaleString();
+                }
             },
             mounted() {
                 this.calculateAge();
                 this.intervalId = setInterval(this.calculateAge, 1000);
+                setInterval(this.updateDateTime, 1000); // Update current date time every second
             },
             beforeDestroy() {
                 clearInterval(this.intervalId);
