@@ -10,33 +10,42 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body>
-    <div id="app" class="bg-gray-900 min-h-screen flex items-center justify-center bg-cover"
+<body class="bg-gray-900">
+    <div id="app" class="min-h-screen flex items-center justify-center relative bg-cover transition-all duration-500"
         style="background-image: url('images/bg.jpg');">
         
         <!-- Overlay -->
-        <div class="absolute inset-0 bg-black opacity-60"></div>
+        <div class="absolute inset-0 bg-black opacity-50"></div>
 
-
-        <div class="absolute top-4 right-4 text-gray-100 text-xl font-mono">
+        <!-- Current Date/Time -->
+        <div v-if="currentDateTime" class="absolute top-4 right-4 text-gray-100 text-xl font-mono animate-slideInFromLeft">
             {{ currentDateTime }}
         </div>
 
-        <div class="bg-gray-800 shadow-lg rounded-lg p-8 w-11/12 max-w-md text-gray-300 z-10">
+        <!-- Content Container -->
+        <div class="bg-gray-800 shadow-2xl rounded-lg p-8 w-11/12 max-w-md text-gray-300 z-10 transform transition-all duration-500 hover:scale-105 hover:shadow-2xl">
             <div class="text-center">
-                <h1 class="text-3xl font-extrabold mb-6 text-gray-100">Age Clock</h1>
-                <label class="block text-gray-400 font-medium mb-4" for="birthDate">
+                <h1 class="text-4xl font-extrabold mb-6 text-gradient text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-indigo-500 animate-bounce">
+                    Age Clock
+                </h1>
+
+                <label class="block text-gray-400 font-medium mb-4 text-xl" for="birthDate">
                     Enter your birth date:
                 </label>
                 <input id="birthDate" type="datetime-local" v-model="birthDate"
-                    class="p-3 bg-gray-700 text-gray-300 border border-gray-600 rounded-md mb-6 focus:outline-none focus:ring-4 focus:ring-purple-500 transition duration-200" />
+                    class="p-3 bg-gray-700 text-gray-300 border border-gray-600 rounded-md mb-6 focus:outline-none focus:ring-4 focus:ring-purple-500 transition duration-200 hover:border-indigo-500" />
+
                 <div class="bg-gray-700 text-gray-100 p-4 rounded-md shadow-md">
-                    <p class="font-mono text-xl font-semibold">Age:</p>
-                    <p class="font-mono text-2xl mt-2">
+                    <p class="font-mono text-xl font-semibold animate-fadeIn">Age:</p>
+                    <p class="font-mono text-3xl mt-2 animate-fadeIn">
                         {{ formattedAge.years }}<span class="text-xs">yr</span>-{{ formattedAge.months }}<span class="text-xs">mn</span>-{{ formattedAge.days }}<span class="text-xs">dy</span> 
                         {{ formattedAge.hours }}:{{ formattedAge.minutes }}:{{ formattedAge.seconds }}
                     </p>
                 </div>
+
+                <button @click="resetAge" class="mt-6 py-2 px-4 bg-indigo-600 text-white font-bold rounded-md hover:bg-indigo-500 transition duration-300 transform hover:scale-105">
+                    Reset
+                </button>
             </div>
         </div>
     </div>
@@ -111,6 +120,10 @@
                 updateDateTime() {
                     const now = new Date();
                     this.currentDateTime = now.toLocaleString();
+                },
+                resetAge() {
+                    this.birthDate = new Date().toISOString().slice(0, 16); // Reset to current date and time
+                    this.calculateAge(); // Recalculate the age
                 }
             },
             mounted() {
@@ -124,6 +137,25 @@
         });
     </script>
 
+    <style>
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        .animate-fadeIn {
+            animation: fadeIn 2s ease-in;
+        }
+
+        @keyframes slideInFromLeft {
+            0% { transform: translateX(-100%); opacity: 0; }
+            100% { transform: translateX(0); opacity: 1; }
+        }
+
+        .animate-slideInFromLeft {
+            animation: slideInFromLeft 1s ease-out;
+        }
+    </style>
 </body>
 
 </html>
