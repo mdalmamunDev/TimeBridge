@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Age Clock</title>
-    <link rel="icon" type="image/x-icon" href="/images/icon.png">
+    <link rel="icon" type="image/x-icon" href="images/icon.png">
+    <!-- <link rel="shortcut icon" href="http://127.0.0.1:8000/vue3_assets/images/logo.png"> -->
     <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
@@ -26,7 +27,10 @@
                 class="p-3 bg-gray-700 text-gray-300 border border-gray-600 rounded-md mb-6 focus:outline-none focus:ring-4 focus:ring-purple-500 transition duration-200" />
             <div class="bg-gray-700 text-gray-100 p-4 rounded-md shadow-md">
                 <p class="font-mono text-xl font-semibold">Age:</p>
-                <p class="font-mono text-2xl mt-2">{{ formattedAge }}</p>
+                <p class="font-mono text-2xl mt-2">
+                    {{ formattedAge.years }}<span class="text-xs">yr</span>-{{ formattedAge.months }}<span class="text-xs">mn</span>-{{ formattedAge.days }}<span class="text-xs">dy</span> 
+                    {{ formattedAge.hours }}:{{ formattedAge.minutes }}:{{ formattedAge.seconds }}
+                </p>
             </div>
         </div>
     </div>
@@ -51,8 +55,14 @@
             computed: {
                 formattedAge() {
                     const { years, months, days, hours, minutes, seconds } = this.age;
-                    return `${years.toString().padStart(2, "0")}-${months.toString().padStart(2, "0")}-${days.toString().padStart(2, "0")} ` +
-                        `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+                    return {
+                        years: years.toString().padStart(2, "0"),
+                        months: months.toString().padStart(2, "0"),
+                        days: days.toString().padStart(2, "0"),
+                        hours: hours.toString().padStart(2, "0"),
+                        minutes: minutes.toString().padStart(2, "0"),
+                        seconds: seconds.toString().padStart(2, "0")
+                    };
                 },
             },
             methods: {
