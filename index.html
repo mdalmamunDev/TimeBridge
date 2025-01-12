@@ -43,9 +43,9 @@
                     </p>
                 </div>
 
-                <button @click="resetAge" class="mt-6 py-2 px-4 bg-indigo-600 text-white font-bold rounded-md hover:bg-indigo-500 transition duration-300 transform hover:scale-105">
+                <!-- <button @click="resetAge" class="mt-6 py-2 px-4 bg-indigo-600 text-white font-bold rounded-md hover:bg-indigo-500 transition duration-300 transform hover:scale-105">
                     Reset
-                </button>
+                </button> -->
             </div>
         </div>
     </div>
@@ -55,7 +55,8 @@
             el: "#app",
             data() {
                 return {
-                    birthDate: "2002-08-10T00:00:00", // Default birth date in ISO format
+                    defaultDate: "2002-08-10T00:00:00",
+                    birthDate: "",
                     age: {
                         years: 0,
                         months: 0,
@@ -122,11 +123,12 @@
                     this.currentDateTime = now.toLocaleString();
                 },
                 resetAge() {
-                    this.birthDate = new Date().toISOString().slice(0, 16); // Reset to current date and time
+                    this.birthDate = this.defaultDate; // Reset to current date and time
                     this.calculateAge(); // Recalculate the age
                 }
             },
             mounted() {
+                this.birthDate = this.defaultDate;
                 this.calculateAge();
                 this.intervalId = setInterval(this.calculateAge, 1000);
                 setInterval(this.updateDateTime, 1000); // Update current date time every second
