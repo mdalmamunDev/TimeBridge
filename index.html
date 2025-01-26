@@ -41,14 +41,14 @@
                     Time Bridge
                 </h1>
 
-                <div class="sm:flex items-center justify-between mb-6 sm:bg-gradient-to-r from-pink-500 to-indigo-500">
-                    <label class="block rounded-md font-medium text-xl p-3" for="fromTime">From</label>
-                    <input id="fromTime" type="datetime-local" v-model="fromTime" class="p-3 bg-gray-700 border border-gray-600 focus:outline-none focus:ring-4 focus:ring-purple-500 transition duration-200 hover:border-indigo-500" />
+                <div class="flex items-center justify-between mb-6">
+                    <label class="block rounded-md rounded-r-none font-medium text-xl p-3 w-full bg-gradient-to-r from-pink-500 to-indigo-500" for="fromTime">From</label>
+                    <input id="fromTime" type="datetime-local" v-model="fromTime" class="rounded-md rounded-l-none p-3 bg-gray-700 border border-gray-600 focus:outline-none focus:ring-4 focus:ring-purple-500 transition duration-200 hover:border-indigo-500" />
                 </div>
 
-                <div class="sm:flex items-center justify-between mb-2 sm:bg-gradient-to-r from-indigo-500 to-pink-500">
-                    <label class="block rounded-md font-medium text-xl p-3" for="toTime">To</label>
-                    <input id="toTime" type="datetime-local" v-model="toTime" class="p-3 bg-gray-700 border border-gray-600 focus:outline-none focus:ring-4 focus:ring-purple-500 transition duration-200 hover:border-indigo-500" />
+                <div class="flex items-center justify-between mb-2">
+                    <label class="block rounded-md rounded-r-none font-medium text-xl p-3 w-full bg-gradient-to-r from-indigo-500 to-pink-500" for="toTime">To</label>
+                    <input id="toTime" type="datetime-local" v-model="toTime" class="rounded-md rounded-l-none p-3 bg-gray-700 border border-gray-600 focus:outline-none focus:ring-4 focus:ring-purple-500 transition duration-200 hover:border-indigo-500" />
                 </div>
 
                 <label @click="toNow" class="flex items-center mb-6 justify-end text-sm font-medium text-gray-900 dark:text-gray-300">
