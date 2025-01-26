@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Age Clock</title>
+    <title>Time Bridge</title>
     <link rel="icon" type="image/x-icon" href="images/icon.png">
     <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -13,7 +13,7 @@
 <body class="bg-gray-900">
     <div id="app" class="min-h-screen flex items-center justify-center relative bg-cover transition-all duration-500"
         style="background-image: url('images/bg.jpg');">
-        
+
         <!-- Overlay -->
         <div class="absolute inset-0 bg-black opacity-50"></div>
 
@@ -26,19 +26,23 @@
         <div class="bg-gray-800 shadow-2xl rounded-lg p-8 w-11/12 max-w-md text-gray-300 z-10 transform transition-all duration-500 hover:scale-105 hover:shadow-2xl">
             <div class="text-center">
                 <h1 class="text-4xl font-extrabold mb-6 text-gradient text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-indigo-500 animate-bounce">
-                    Age Clock
+                    Time Bridge
                 </h1>
 
-                <label class="block text-gray-400 font-medium mb-4 text-xl" for="birthDate">
-                    Enter your birth date:
-                </label>
-                <input id="birthDate" type="datetime-local" v-model="birthDate"
-                    class="p-3 bg-gray-700 text-gray-300 border border-gray-600 rounded-md mb-6 focus:outline-none focus:ring-4 focus:ring-purple-500 transition duration-200 hover:border-indigo-500" />
+                <div class="sm:flex items-center justify-between mb-6 sm:bg-purple-900">
+                    <label class="block rounded-md font-medium text-xl p-3" for="fromTime">From</label>
+                    <input id="fromTime" type="datetime-local" v-model="fromTime" class="p-3 bg-gray-700 border border-gray-600 focus:outline-none focus:ring-4 focus:ring-purple-500 transition duration-200 hover:border-indigo-500" />
+                </div>
+
+                <div class="sm:flex items-center justify-between mb-6 sm:bg-purple-900">
+                    <label class="block rounded-md font-medium text-xl p-3" for="toTime">To</label>
+                    <input id="toTime" type="datetime-local" v-model="fromTime" class="p-3 bg-gray-700 border border-gray-600 focus:outline-none focus:ring-4 focus:ring-purple-500 transition duration-200 hover:border-indigo-500" />
+                </div>
 
                 <div class="bg-gray-700 text-gray-100 p-4 rounded-md shadow-md">
                     <p class="font-mono text-xl font-semibold animate-fadeIn">Age:</p>
                     <p class="font-mono text-3xl mt-2 animate-fadeIn">
-                        {{ formattedAge.years }}<span class="text-xs">yr</span>-{{ formattedAge.months }}<span class="text-xs">mn</span>-{{ formattedAge.days }}<span class="text-xs">dy</span> 
+                        {{ formattedAge.years }}<span class="text-xs">yr</span>-{{ formattedAge.months }}<span class="text-xs">mn</span>-{{ formattedAge.days }}<span class="text-xs">dy</span>
                         {{ formattedAge.hours }}:{{ formattedAge.minutes }}:{{ formattedAge.seconds }}
                     </p>
                 </div>
@@ -56,7 +60,7 @@
             data() {
                 return {
                     defaultDate: "2002-08-10T00:00:00",
-                    birthDate: "",
+                    fromTime: "",
                     age: {
                         years: 0,
                         months: 0,
@@ -84,15 +88,15 @@
             },
             methods: {
                 calculateAge() {
-                    const birthDateTime = new Date(this.birthDate);
+                    const fromTimeTime = new Date(this.fromTime);
                     const now = new Date();
 
-                    let years = now.getFullYear() - birthDateTime.getFullYear();
-                    let months = now.getMonth() - birthDateTime.getMonth();
-                    let days = now.getDate() - birthDateTime.getDate();
-                    let hours = now.getHours() - birthDateTime.getHours();
-                    let minutes = now.getMinutes() - birthDateTime.getMinutes();
-                    let seconds = now.getSeconds() - birthDateTime.getSeconds();
+                    let years = now.getFullYear() - fromTimeTime.getFullYear();
+                    let months = now.getMonth() - fromTimeTime.getMonth();
+                    let days = now.getDate() - fromTimeTime.getDate();
+                    let hours = now.getHours() - fromTimeTime.getHours();
+                    let minutes = now.getMinutes() - fromTimeTime.getMinutes();
+                    let seconds = now.getSeconds() - fromTimeTime.getSeconds();
 
                     if (seconds < 0) {
                         seconds += 60;
@@ -123,12 +127,12 @@
                     this.currentDateTime = now.toLocaleString();
                 },
                 resetAge() {
-                    this.birthDate = this.defaultDate; // Reset to current date and time
+                    this.fromTime = this.defaultDate; // Reset to current date and time
                     this.calculateAge(); // Recalculate the age
                 }
             },
             mounted() {
-                this.birthDate = this.defaultDate;
+                this.fromTime = this.defaultDate;
                 this.calculateAge();
                 this.intervalId = setInterval(this.calculateAge, 1000);
                 setInterval(this.updateDateTime, 1000); // Update current date time every second
