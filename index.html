@@ -42,19 +42,20 @@
                 </h1>
 
                 <div class="flex items-center mb-6">
-                    <label class="block rounded-md rounded-r-none font-medium text-xl p-3 w-1/4 bg-gradient-to-r from-pink-500 to-indigo-500" for="fromTime">From</label>
+                    <button @click="fromNow" class="relative rounded-md rounded-r-none font-medium text-xl p-3 w-1/4 bg-gradient-to-r from-pink-500 to-indigo-500">
+                        From
+                        <img v-if="!fromTime" class="absolute top-0 right-0" src="images/life.gif" width="25">
+                    </button>
                     <input id="fromTime" type="datetime-local" v-model="fromTime" class="w-3/4 rounded-md rounded-l-none p-3 bg-gray-700 border border-gray-600 focus:outline-none focus:ring-4 focus:ring-purple-500 transition duration-200 hover:border-indigo-500" />
                 </div>
 
-                <div class="flex items-center mb-2">
-                    <label class="block rounded-md rounded-r-none font-medium text-xl p-3 w-1/4 bg-gradient-to-r from-indigo-500 to-pink-500" for="toTime">To</label>
+                <div class="flex items-center mb-8">
+                    <button @click="toNow" class="relative rounded-md rounded-r-none font-medium text-xl p-3 w-1/4 bg-gradient-to-r from-pink-500 to-indigo-500">
+                        To
+                        <img v-if="!toTime" class="absolute top-0 right-0" src="images/life.gif" width="25">
+                    </button>
                     <input id="toTime" type="datetime-local" v-model="toTime" class="w-3/4 rounded-md rounded-l-none p-3 bg-gray-700 border border-gray-600 focus:outline-none focus:ring-4 focus:ring-purple-500 transition duration-200 hover:border-indigo-500" />
                 </div>
-
-                <label @click="toNow" class="flex items-center mb-6 justify-end text-sm font-medium text-gray-900 dark:text-gray-300">
-                    <input type="checkbox" :checked="toTime === ''" class="me-1 w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                    Now
-                </label>
 
                 <div class="bg-gray-700 text-gray-100 p-4 rounded-md shadow-md">
                     <p class="font-mono text-3xl mt-2 animate-fadeIn">
@@ -139,7 +140,7 @@
             },
             methods: {
                 calculateResult() {
-                    const fromTimeTime = new Date(this.fromTime);
+                    const fromTimeTime = this.fromTime ? new Date(this.fromTime) : new Date();
                     const now = this.toTime ? new Date(this.toTime) : new Date();
 
                     let years = now.getFullYear() - fromTimeTime.getFullYear();
@@ -178,8 +179,12 @@
                     this.currentDateTime = now.toLocaleString();
                 },
 
+                fromNow() {
+                    this.fromTime = this.fromTime ? "" : new Date().toISOString().split('.')[0];
+                    console.log(this.fromTime);
+                },
                 toNow() {
-                    this.toTime = "";
+                    this.toTime = this.toTime ? "" : new Date().toISOString().split('.')[0];
                 },
 
                 openBookMarks() {
