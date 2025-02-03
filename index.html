@@ -174,17 +174,28 @@
 
                     this.result = { years, months, days, hours, minutes, seconds };
                 },
+                convertUTCToLocal(utcDateString) {
+                    const date = new Date(utcDateString);
+                    
+                    const year = date.getFullYear();
+                    const month = String(date.getMonth() + 1).padStart(2, '0'); // Ensure two digits
+                    const day = String(date.getDate()).padStart(2, '0');
+                    const hours = String(date.getHours()).padStart(2, '0');
+                    const minutes = String(date.getMinutes()).padStart(2, '0');
+                    const seconds = String(date.getSeconds()).padStart(2, '0');
+                    
+                    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+                },
                 updateDateTime() {
                     const now = new Date();
                     this.currentDateTime = now.toLocaleString();
                 },
 
                 fromNow() {
-                    this.fromTime = this.fromTime ? "" : new Date().toISOString().split('.')[0];
-                    console.log(this.fromTime);
+                    this.fromTime = this.fromTime ? "" : this.convertUTCToLocal(new Date().toISOString());
                 },
                 toNow() {
-                    this.toTime = this.toTime ? "" : new Date().toISOString().split('.')[0];
+                    this.toTime = this.toTime ? "" : this.convertUTCToLocal(new Date().toISOString());
                 },
 
                 openBookMarks() {
