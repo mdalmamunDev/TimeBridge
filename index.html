@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Time Bridge</title>
     <link rel="icon" type="image/x-icon" href="images/icon.png">
+    <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
@@ -27,7 +28,12 @@
         <div class="hidden absolute inset-y-0 left-4 sm:flex items-center text-gray-100 font-mono animate-slideInFromLeft">
             <div class="bg-pink-100/30 backdrop-blur rounded">
                 <div v-for="(bookMark, index) in bookMarks">
-                    <button @click="setBridge(bookMark.bridge)" class="px-4 py-2 w-full hover:bg-pink-200/40 transition flex items-center" :class="index < bookMarks.length-1 ? 'border-b-2' : ''">
+                    <button @click="setBridge(bookMark.bridge)" class="px-4 py-2 w-full hover:bg-pink-200/40 transition flex items-center"
+                            :class="{
+                                'border-b-2': index < bookMarks.length - 1,
+                                'bg-pink-200/40': isCurr(bookMark)
+                            }"
+                    >
                         <i class="fa-solid fa-angles-right me-1 mb-1"></i>{{ bookMark.label }}
                     </button>
                 </div>
@@ -38,13 +44,13 @@
         <div class="bg-gray-800 shadow-2xl rounded-lg p-8 w-11/12 max-w-md text-gray-300 transform transition-all duration-500 hover:scale-105 hover:shadow-2xl">
             <div class="text-center">
                 <h1 class="text-4xl font-extrabold mb-6 text-gradient text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-indigo-500 animate-bounce">
-                    Time Bridge
+                    {{ currLabel }}
                 </h1>
 
                 <div class="flex items-center mb-6">
                     <button @click="fromNow" class="relative rounded-md rounded-r-none font-medium text-xl p-3 w-1/4 bg-gradient-to-r from-pink-500 to-indigo-500">
                         From
-                        <img v-if="!fromTime" class="absolute top-0 right-0" src="images/life.gif" width="25">
+                        <div v-if="!fromTime" class="absolute top-2 right-2 w-3 h-3 bg-pink-500 rounded-full animate-blink"></div>
                     </button>
                     <input id="fromTime" type="datetime-local" v-model="fromTime" class="w-3/4 rounded-md rounded-l-none p-3 bg-gray-700 border border-gray-600 focus:outline-none focus:ring-4 focus:ring-purple-500 transition duration-200 hover:border-indigo-500" />
                 </div>
@@ -52,7 +58,7 @@
                 <div class="flex items-center mb-8">
                     <button @click="toNow" class="relative rounded-md rounded-r-none font-medium text-xl p-3 w-1/4 bg-gradient-to-r from-pink-500 to-indigo-500">
                         To
-                        <img v-if="!toTime" class="absolute top-0 right-0" src="images/life.gif" width="25">
+                        <div v-if="!toTime" class="absolute top-2 right-2 w-3 h-3 bg-pink-500 rounded-full animate-blink"></div>
                     </button>
                     <input id="toTime" type="datetime-local" v-model="toTime" class="w-3/4 rounded-md rounded-l-none p-3 bg-gray-700 border border-gray-600 focus:outline-none focus:ring-4 focus:ring-purple-500 transition duration-200 hover:border-indigo-500" />
                 </div>
@@ -73,7 +79,12 @@
         <div v-if="isOpenBookMarks" class="absolute inset-y-0 left-4 flex sm:hidden items-center text-gray-100 font-mono animate-slideInFromLeft">
             <div class="bg-pink-100/30 backdrop-blur rounded">
                 <div v-for="(bookMark, index) in bookMarks">
-                    <button @click="setBridge(bookMark.bridge)" class="px-4 py-2 w-full hover:bg-pink-200/40 transition flex items-center" :class="index < bookMarks.length-1 ? 'border-b-2' : ''">
+                    <button @click="setBridge(bookMark.bridge)" class="px-4 py-2 w-full hover:bg-pink-200/40 transition flex items-center"
+                            :class="{
+                                'border-b-2': index < bookMarks.length - 1,
+                                'bg-pink-200/40': isCurr(bookMark)
+                            }"
+                    >
                         <i class="fa-solid fa-angles-right me-1 mb-1"></i>{{ bookMark.label }}
                     </button>
                 </div>
@@ -103,11 +114,11 @@
 
                     bookMarks: [
                         {
-                            label: "My Birth",
+                            label: "My Age",
                             bridge: {from: "2002-08-10T00:00:00", to: ""}
                         },
                         {
-                            label: "Hena's Birth",
+                            label: "Hena's Age",
                             bridge: {from: "2002-08-22T00:00:00", to: ""}
                         },
                         {
@@ -115,11 +126,11 @@
                             bridge: {from: "2024-06-26T16:00:00", to: ""}
                         },
                         {
-                            label: "Meher's Birth",
+                            label: "Meher's Age",
                             bridge: {from: "2020-10-07T11:30:00", to: ""}
                         },
                         {
-                            label: "Masom's Birth",
+                            label: "Masom's Age",
                             bridge: {from: "1996-10-24T00:00:00", to: ""}
                         },
                     ],
@@ -137,6 +148,17 @@
                         seconds: seconds.toString().padStart(2, "0")
                     };
                 },
+
+                currLabel() {
+                    let label = '';
+                    this.bookMarks.forEach((bm) => {
+                        if (bm && bm.bridge && bm.bridge.from === this.fromTime && bm.bridge.to === this.toTime) {
+                            label += (label && bm.label ? ' - ' : ' ') + bm.label;
+                        }
+                    });
+
+                    return label ? label : 'Time Bridge';
+                }
             },
             methods: {
                 calculateResult() {
@@ -209,6 +231,10 @@
                     this.fromTime = bridge.from;
                     this.toTime = bridge.to;
                 },
+
+                isCurr(bookMark) {
+                    return bookMark && bookMark.bridge && bookMark.bridge.from === this.fromTime && bookMark.bridge.to === this.toTime;
+                },
             },
             mounted() {
                 this.fromTime = this.defaultDate;
@@ -221,35 +247,6 @@
             },
         });
     </script>
-
-    <style>
-        @keyframes fadeIn {
-            0% { opacity: 0; }
-            100% { opacity: 1; }
-        }
-
-        .animate-fadeIn {
-            animation: fadeIn 2s ease-in;
-        }
-
-        @keyframes slideInFromLeft {
-            0% { transform: translateX(-100%); opacity: 0; }
-            100% { transform: translateX(0); opacity: 1; }
-        }
-
-        @keyframes slideInFromRight {
-            0% {transform: translateX(100%);opacity: 0;}
-            100% {transform: translateX(0);opacity: 1;}
-        }
-
-        .animate-slideInFromLeft {
-            animation: slideInFromLeft 1s ease-out;
-        }
-
-        .animate-slideInFromRight {
-            animation: slideInFromRight 1s ease-out;
-        }
-    </style>
 </body>
 
 </html>
